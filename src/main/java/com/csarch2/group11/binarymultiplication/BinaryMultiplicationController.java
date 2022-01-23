@@ -25,7 +25,7 @@ public class BinaryMultiplicationController {
 
         // If input is in DECIMAL, then convert to BINARY
         if (input.getInputType().equalsIgnoreCase(Input.DECIMAL)) {
-            calculator.convertToBinary ();
+            calculator.decimalToBinary ();
         }
 
         // Proceed to solving

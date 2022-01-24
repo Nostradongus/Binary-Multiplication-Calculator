@@ -10,6 +10,18 @@ public class Calculator {
 
     public Calculator (Input input) {
         this.input = input;
+
+        // equalize number of bits for both multiplicand and multiplier if not equal, sign-extend
+        String multiplicand = this.input.getMultiplicand();
+        String multiplier = this.input.getMultiplier();
+        if (input.getInputType().equalsIgnoreCase(Input.BINARY) &&
+            multiplicand.length() != multiplier.length()) {
+            if (multiplicand.length() > multiplier.length()) {
+                input.setMultiplier(extendBinary(multiplier, multiplicand.length() - multiplier.length(), multiplier.charAt(0)));
+            } else if (multiplicand.length() < multiplier.length()) {
+                input.setMultiplicand(extendBinary(multiplicand, multiplier.length() - multiplicand.length(), multiplicand.charAt(0)));
+            }
+        }
     }
 
     Answer performPenAndPencil () {
@@ -38,7 +50,7 @@ public class Calculator {
             if (multiplier.charAt(i) == '1') {
                 intermediate = multiplicand + intermediate;
             } else {
-                intermediate = addLeadingZeroes(intermediate, multiplier.length());
+                intermediate = extendBinary(intermediate, multiplier.length(), '0');
             }
             // 3) sign-extend
             char signBit = intermediate.charAt(0);
@@ -110,9 +122,9 @@ public class Calculator {
         // add leading zeroes to binary string with the lowest number of bits
         // based on the number of bits the longest binary string has
         if (binMultiplicand.length() > binMultiplier.length()) {
-            binMultiplier = addLeadingZeroes(binMultiplier, binMultiplicand.length() - binMultiplier.length());
+            binMultiplier = extendBinary(binMultiplier, binMultiplicand.length() - binMultiplier.length(), '0');
         } else if (binMultiplicand.length() < binMultiplier.length()) {
-            binMultiplicand = addLeadingZeroes(binMultiplicand, binMultiplier.length() - binMultiplicand.length());
+            binMultiplicand = extendBinary(binMultiplicand, binMultiplier.length() - binMultiplicand.length(), '0');
         }
         // check for negative inputs, convert to 2's complement as needed
         if (decMultiplicand.charAt(0) == '-') {
@@ -144,9 +156,9 @@ public class Calculator {
         return 0 + binaryString;
     }
 
-    private String addLeadingZeroes(String binary, int numOfZeroes) {
-        for (int i = 1; i <= numOfZeroes; i++) {
-            binary = 0 + binary;
+    private String extendBinary(String binary, int numOfBitsToExtend, char bit) {
+        for (int i = 1; i <= numOfBitsToExtend; i++) {
+            binary = bit + binary;
         }
         return binary;
     }

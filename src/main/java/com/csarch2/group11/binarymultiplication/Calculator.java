@@ -108,18 +108,19 @@ public class Calculator {
             intermediates.add("");
         }
 
-        // indentation factor
         int factor = 0;
-
-        // compute for intermediates
+        // (1) Multiply each bit of the multiplier to the multiplicand (Right to Left)
         for (int i = multiplierLength - 1; i > 0; i-=2) {
+            // Get current intermediate
             String intermediate = intermediates.get((multiplierLength - (i + 1)) / 2);
 
+            // (2) Shift immediate to left based on current intermediate's position (factor)
             for (int j = 0; j < factor; j++) {
                 intermediate += " ";
             }
 
-            // if multiplier is '1'
+            // (3) Multiply
+            // If multiplier is '1'
             if (multiplier.charAt (i) == '1') {
                 // if '+'
                 if (multiplier.charAt (i - 1) == '+') {
@@ -133,19 +134,21 @@ public class Calculator {
                 intermediate = extendBinary (intermediate, multiplier.length () / 2, '0');
             }
 
+            // (4) Sign-extension
             char signBit = intermediate.charAt(0);
             for (int j = 1; j <= i + 1; j+=2) {
                 intermediate = signBit + intermediate;
             }
 
+            // (5) Update current intermediate in ArrayList
             intermediates.set((multiplierLength - (i + 1)) / 2, intermediate);
 
-            // increment factor every 2nd iteration (due to x2 length of multiplier)
+            // (6) increment factor every 2nd iteration (due to x2 length of multiplier)
             if (i % 2 == 1)
                 factor++;
         }
 
-        // calculate sum of intermediates to get final result
+        // (7) Calculate sum of intermediates to get final result
         String answer = "";
         int bitCarry = 0;
         // traverse through each bit
@@ -172,8 +175,92 @@ public class Calculator {
     }
 
     Answer performExtendedBooths () {
-        // TODO: remove this
-        return createTemporaryAnswer();
+        String multiplicand = input.getMultiplicand ();
+        String multiplier = getExtendedBoothsEquivalent (input.getMultiplier ());
+        int multiplierLength = multiplier.length ();
+
+        // initialize string ArrayList for intermediates
+        ArrayList<String> intermediates = new ArrayList<>();
+        for (int i = 0; i < multiplierLength / 2; i++) {
+            intermediates.add("");
+        }
+
+        int factor = 0;
+        // (1) Multiply each bit of the multiplier to the multiplicand (Right to Left)
+        for (int i = multiplier.length () - 1; i > 0; i-=2) {
+            // Get current intermediate
+            String intermediate = intermediates.get ((multiplier.length () - (i + 1)) / 2);
+
+            // (2) Shift immediate to left based on current intermediate's position (factor)
+            for (int j = 0; j < factor; j++) {
+                intermediate += "  ";
+            }
+
+            // (3) Multiply
+            if (multiplier.charAt (i) == '1') {
+                // if +1
+                if (multiplier.charAt (i - 1) == '+') {
+                    intermediate = multiplicand + intermediate;
+                // if -1
+                } else {
+                    intermediate = convertToTwosComplement(multiplicand) + intermediate;
+                }
+            } else if (multiplier.charAt (i) == '2') {
+                // if +2
+                if (multiplier.charAt (i - 1) == '+') {
+                    intermediate = multiplicand + '0' + intermediate;
+                // if -2
+                } else {
+                    intermediate = convertToTwosComplement(multiplicand) + '0' + intermediate;
+                }
+            // if 0
+            } else {
+                intermediate = extendBinary (intermediate, multiplier.length(), '0');
+            }
+
+            // (4) Sign-extension
+            char signBit = intermediate.charAt (0);
+            for (int j = 1; j <= i + 1; j++) {
+                intermediate = signBit + intermediate;
+            }
+
+            // if '2' bit multiplier, perform 'shift left'
+            if (multiplier.charAt (i) == '2') {
+                intermediate = intermediate.substring (1);
+            }
+
+            // (5) Update current intermediate in ArrayList
+            intermediates.set((multiplier.length() - (i + 1)) / 2, intermediate);
+
+            // (6) increment factor every 2nd iteration (due to x2 length of multiplier)
+            if (i % 2 == 1)
+                factor++;
+        }
+
+        // (7) Calculate sum of intermediates to get final result
+        String answer = "";
+        int bitCarry = 0;
+        // traverse through each bit
+        for (int i = intermediates.get(0).length() - 1; i >= 0; i--) {
+            int bitSum = bitCarry;
+            // traverse through each intermediate with current bit position
+            for (int j = 0; j < intermediates.size(); j++) {
+                if (intermediates.get(j).charAt(i) == '1') {
+                    bitSum++;
+                }
+            }
+            if (bitSum > 1) {
+                int quotient = bitSum / 2;
+                int remainder = bitSum % 2;
+                bitCarry = quotient;
+                answer = remainder + answer;
+            } else {
+                bitCarry = 0;
+                answer = bitSum + answer;
+            }
+        }
+
+        return new Answer(multiplicand, multiplier, intermediates, answer);
     }
 
     void decimalToBinary () {
@@ -247,27 +334,12 @@ public class Calculator {
         return twosComplement;
     }
 
-    // TODO: remove this
-    private Answer createTemporaryAnswer () {
-        String temp = "101";
-        return new Answer (temp, temp, new ArrayList<String>(), temp);
-    }
-
     private String getBoothsEquivalent (String binary) {
-        // 1 -> 0 : -1
-        // 0 -> 1 : +1
-        // 0 -> 0 : 0
-        // 1 -> 1 : 0
-
-        /* STEPS:
-         * (1) Append 0 to LSB
-         * (2) Pair starting at LSB
-         * (3) Convert
-         */
-
+        // (1) Append 0 at the end of given multiplier
         String temp = binary + "0";
         StringBuilder boothsEquivalent = new StringBuilder();
 
+        // (2) Generate Booth's equivalent
         for (int i = 0; i < temp.length () - 1; i++) {
             // 0 to 0; 1 to 1
             if (temp.charAt (i) == temp.charAt (i + 1)) {
@@ -283,4 +355,43 @@ public class Calculator {
 
         return boothsEquivalent.toString ();
     }
+
+    private String getExtendedBoothsEquivalent (String binary) {
+        // (1) Append 0 at the end of given multiplier
+        String temp = binary + "0";
+
+        // (2) If the length of the original multiplier is ODD,
+        //     then sign-extend it.
+        if (binary.length () % 2 == 1) {
+            char signBit = binary.charAt (0);
+            temp = signBit + temp;
+        }
+
+        StringBuilder extendedBoothsEquivalent = new StringBuilder();
+
+        // (3) Generate Booth's equivalent
+        for (int i = 0; i < temp.length () - 2; i+=2) {
+            String currTrio = temp.substring (i, i+3);
+
+            // if '000' or '111'
+            if (currTrio.equalsIgnoreCase ("000") || currTrio.equalsIgnoreCase ("111")) {
+                extendedBoothsEquivalent.insert(extendedBoothsEquivalent.length(), " 0");
+            // if '001' or '010'
+            } else if (currTrio.equalsIgnoreCase ("001") || currTrio.equalsIgnoreCase ("010")) {
+                extendedBoothsEquivalent.insert(extendedBoothsEquivalent.length(), "+1");
+            // if '101' or '110'
+            } else if (currTrio.equalsIgnoreCase ("101") || currTrio.equalsIgnoreCase ("110")) {
+                extendedBoothsEquivalent.insert(extendedBoothsEquivalent.length(), "-1");
+            // if '011'
+            } else if (currTrio.equalsIgnoreCase ("011")) {
+                extendedBoothsEquivalent.insert(extendedBoothsEquivalent.length(), "+2");
+            // if '100'
+            } else if (currTrio.equalsIgnoreCase ("100")) {
+                extendedBoothsEquivalent.insert(extendedBoothsEquivalent.length(), "-2");
+            }
+        }
+
+        return extendedBoothsEquivalent.toString ();
+    }
+
 }

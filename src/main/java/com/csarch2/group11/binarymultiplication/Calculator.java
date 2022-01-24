@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class Calculator {
-    private Answer answer;
+
     private Input input;
 
     public Calculator (Input input) {
@@ -12,21 +12,20 @@ public class Calculator {
     }
 
     Answer performPenAndPencil () {
+
+
         // TODO: remove this
-        createTemporaryAnswer();
-        return this.answer;
+        return createTemporaryAnswer();
     }
 
     Answer performBooths () {
         // TODO: remove this
-        createTemporaryAnswer();
-        return this.answer;
+        return createTemporaryAnswer();
     }
 
     Answer performExtendedBooths () {
         // TODO: remove this
-        createTemporaryAnswer();
-        return this.answer;
+        return createTemporaryAnswer();
     }
 
     void decimalToBinary () {
@@ -37,8 +36,16 @@ public class Calculator {
         int nMultiplicand = convertDecimalStringToInteger(decMultiplicand);
         int nMultiplier = convertDecimalStringToInteger(decMultiplier);
         // convert decimals to unsigned binary forms first
-        String binMultiplicand = convertToBinaryString(nMultiplicand);
-        String binMultiplier = convertToBinaryString(nMultiplier);
+        String binMultiplicand = convertIntegerToBinaryString(nMultiplicand);
+        String binMultiplier = convertIntegerToBinaryString(nMultiplier);
+        // check if number of bits for both binary strings are not the same
+        // add leading zeroes to binary string with the lowest number of bits
+        // based on the number of bits the longest binary string has
+        if (binMultiplicand.length() > binMultiplier.length()) {
+            binMultiplier = addLeadingZeroes(binMultiplier, binMultiplicand.length() - binMultiplier.length());
+        } else if (binMultiplicand.length() < binMultiplier.length()) {
+            binMultiplicand = addLeadingZeroes(binMultiplicand, binMultiplier.length() - binMultiplicand.length());
+        }
         // check for negative inputs, convert to 2's complement as needed
         if (decMultiplicand.charAt(0) == '-') {
             binMultiplicand = convertToTwosComplement(binMultiplicand);
@@ -58,7 +65,7 @@ public class Calculator {
                 : Integer.parseInt(decimal);
     }
 
-    private String convertToBinaryString(int decimal) {
+    private String convertIntegerToBinaryString(int decimal) {
         String binaryString = "";
         while (decimal > 0) {
             int remainder = decimal % 2;
@@ -67,6 +74,13 @@ public class Calculator {
         }
         // add sign bit
         return 0 + binaryString;
+    }
+
+    private String addLeadingZeroes(String binary, int numOfZeroes) {
+        for (int i = 1; i <= numOfZeroes; i++) {
+            binary = 0 + binary;
+        }
+        return binary;
     }
 
     private String convertToTwosComplement(String binary) {
@@ -86,9 +100,8 @@ public class Calculator {
     }
 
     // TODO: remove this
-    private void createTemporaryAnswer () {
-        StringBuilder temp = new StringBuilder();
-        temp.append ("101");
-        this.answer = new Answer (temp, temp);
+    private Answer createTemporaryAnswer () {
+        String temp = "101";
+        return new Answer (temp, temp);
     }
 }

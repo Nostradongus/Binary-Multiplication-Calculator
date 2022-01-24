@@ -28,7 +28,7 @@ public class BinaryMultiplicationController {
             calculator.decimalToBinary ();
         }
 
-        // Proceed to solving
+        // Proceed to solving based on method chosen
         if (input.getMethod() == Input.PEN_AND_PAPER) {
             this.answer = calculator.performPenAndPencil();
         } else if (input.getMethod() == Input.BOOTHS) {

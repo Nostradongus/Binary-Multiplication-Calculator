@@ -18,7 +18,7 @@ public class Calculator {
             multiplicand.length() != multiplier.length()) {
             if (multiplicand.length() > multiplier.length()) {
                 input.setMultiplier(extendBinary(multiplier, multiplicand.length() - multiplier.length(), multiplier.charAt(0)));
-            } else if (multiplicand.length() < multiplier.length()) {
+            } else {
                 input.setMultiplicand(extendBinary(multiplicand, multiplier.length() - multiplicand.length(), multiplicand.charAt(0)));
             }
         }

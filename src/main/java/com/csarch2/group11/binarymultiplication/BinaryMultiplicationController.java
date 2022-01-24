@@ -20,6 +20,7 @@ public class BinaryMultiplicationController {
         // Reset answer
         this.answer = null;
 
+
         // Create Calculator instance
         Calculator calculator = new Calculator (input);
 
@@ -30,7 +31,7 @@ public class BinaryMultiplicationController {
 
         // Proceed to solving based on method chosen
         if (input.getMethod() == Input.PEN_AND_PAPER) {
-            this.answer = calculator.performPenAndPencil();
+            this.answer = calculator.performPenAndPaper();
         } else if (input.getMethod() == Input.BOOTHS) {
             this.answer = calculator.performBooths();
         } else if (input.getMethod() == Input.EXTENDED_BOOTHS) {

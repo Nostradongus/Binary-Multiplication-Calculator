@@ -11,20 +11,19 @@ public class Calculator {
     public Calculator (Input input) {
         this.input = input;
 
-        // equalize number of bits for both multiplicand and multiplier if not equal, sign-extend
         String multiplicand = this.input.getMultiplicand();
         String multiplier = this.input.getMultiplier();
         if (input.getInputType().equalsIgnoreCase(Input.BINARY) &&
-            multiplicand.length() != multiplier.length()) {
+                multiplicand.length() != multiplier.length()) {
             if (multiplicand.length() > multiplier.length()) {
-                input.setMultiplier(extendBinary(multiplier, multiplicand.length() - multiplier.length(), multiplier.charAt(0)));
-            } else {
-                input.setMultiplicand(extendBinary(multiplicand, multiplier.length() - multiplicand.length(), multiplicand.charAt(0)));
+                input.setMultiplier(extendBinary(multiplier, multiplicand.length() - multiplier.length(), multiplier.charAt (0)));
+            } else if (multiplicand.length() < multiplier.length()) {
+                input.setMultiplicand(extendBinary(multiplicand, multiplier.length() - multiplicand.length(), multiplicand.charAt (0)));
             }
         }
     }
 
-    Answer performPenAndPencil () {
+    Answer performPenAndPaper() {
         String multiplicand = input.getMultiplicand();
         String multiplier = input.getMultiplier();
 
@@ -99,8 +98,77 @@ public class Calculator {
     }
 
     Answer performBooths () {
-        // TODO: remove this
-        return createTemporaryAnswer();
+        String multiplicand = input.getMultiplicand ();
+        String multiplier = getBoothsEquivalent (input.getMultiplier ());
+        int multiplierLength = multiplier.length ();
+
+        // initialize string ArrayList for intermediates
+        ArrayList<String> intermediates = new ArrayList<>();
+        for (int i = 0; i < multiplierLength / 2; i++) {
+            intermediates.add("");
+        }
+
+        // indentation factor
+        int factor = 0;
+
+        // compute for intermediates
+        for (int i = multiplierLength - 1; i > 0; i-=2) {
+            String intermediate = intermediates.get((multiplierLength - (i + 1)) / 2);
+
+            for (int j = 0; j < factor; j++) {
+                intermediate += " ";
+            }
+
+            // if multiplier is '1'
+            if (multiplier.charAt (i) == '1') {
+                // if '+'
+                if (multiplier.charAt (i - 1) == '+') {
+                    intermediate = multiplicand + intermediate;
+                // if '-'
+                } else {
+                    intermediate = convertToTwosComplement(multiplicand) + intermediate;
+                }
+            // if multiplier is '0'
+            } else {
+                intermediate = extendBinary (intermediate, multiplier.length () / 2, '0');
+            }
+
+            char signBit = intermediate.charAt(0);
+            for (int j = 1; j <= i + 1; j+=2) {
+                intermediate = signBit + intermediate;
+            }
+
+            intermediates.set((multiplierLength - (i + 1)) / 2, intermediate);
+
+            // increment factor every 2nd iteration (due to x2 length of multiplier)
+            if (i % 2 == 1)
+                factor++;
+        }
+
+        // calculate sum of intermediates to get final result
+        String answer = "";
+        int bitCarry = 0;
+        // traverse through each bit
+        for (int i = intermediates.get(0).length() - 1; i >= 0; i--) {
+            int bitSum = bitCarry;
+            // traverse through each intermediate with current bit position
+            for (int j = 0; j < intermediates.size(); j++) {
+                if (intermediates.get(j).charAt(i) == '1') {
+                    bitSum++;
+                }
+            }
+            if (bitSum > 1) {
+                int quotient = bitSum / 2;
+                int remainder = bitSum % 2;
+                bitCarry = quotient;
+                answer = remainder + answer;
+            } else {
+                bitCarry = 0;
+                answer = bitSum + answer;
+            }
+        }
+
+        return new Answer(multiplicand, multiplier, intermediates, answer);
     }
 
     Answer performExtendedBooths () {
@@ -183,5 +251,36 @@ public class Calculator {
     private Answer createTemporaryAnswer () {
         String temp = "101";
         return new Answer (temp, temp, new ArrayList<String>(), temp);
+    }
+
+    private String getBoothsEquivalent (String binary) {
+        // 1 -> 0 : -1
+        // 0 -> 1 : +1
+        // 0 -> 0 : 0
+        // 1 -> 1 : 0
+
+        /* STEPS:
+         * (1) Append 0 to LSB
+         * (2) Pair starting at LSB
+         * (3) Convert
+         */
+
+        String temp = binary + "0";
+        StringBuilder boothsEquivalent = new StringBuilder();
+
+        for (int i = 0; i < temp.length () - 1; i++) {
+            // 0 to 0; 1 to 1
+            if (temp.charAt (i) == temp.charAt (i + 1)) {
+                boothsEquivalent.insert(boothsEquivalent.length(), " 0");
+            // 0 to 1
+            } else if (temp.charAt (i) == '0' && temp.charAt (i + 1) == '1') {
+                boothsEquivalent.insert(boothsEquivalent.length(), "+1");
+            // 1 to 0
+            } else if (temp.charAt (i) == '1' && temp.charAt (i + 1) == '0') {
+                boothsEquivalent.insert(boothsEquivalent.length(), "-1");
+            }
+        }
+
+        return boothsEquivalent.toString ();
     }
 }

@@ -14,6 +14,22 @@ public class Answer {
         this.multiplicand = multiplicand;
         this.multiplier = multiplier;
         this.intermediates = intermediates;
-        this.answer = this.answer;
+        this.answer = answer;
+    }
+
+    public String getAnswer () {
+        return this.answer;
+    }
+
+    public String getMultiplicand() {
+        return multiplicand;
+    }
+
+    public String getMultiplier() {
+        return multiplier;
+    }
+
+    public ArrayList<String> getIntermediates() {
+        return intermediates;
     }
 }

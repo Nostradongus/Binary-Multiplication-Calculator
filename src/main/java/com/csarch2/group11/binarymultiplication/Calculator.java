@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 @Entity
 public class Calculator {
 
+    private StringBuilder solution;
+    private StringBuilder answer;
     private Input input;
 
     public Calculator (Input input) {
@@ -16,6 +18,7 @@ public class Calculator {
 
         // TODO: remove this
         return createTemporaryAnswer();
+        // proposed: return new Answer(solution.toString(), answer.toString());
     }
 
     Answer performBooths () {

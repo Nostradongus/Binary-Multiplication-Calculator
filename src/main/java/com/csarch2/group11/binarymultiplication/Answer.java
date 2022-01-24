@@ -4,19 +4,19 @@ import javax.persistence.Entity;
 
 @Entity
 public class Answer {
-    private StringBuilder solution;
-    private StringBuilder answer;
+    String solution;
+    String answer;
 
-    public Answer (StringBuilder solution, StringBuilder answer) {
+    public Answer (String solution, String answer) {
         this.solution = solution;
         this.answer = answer;
     }
 
-    StringBuilder getSolution () {
+    public String getSolution() {
         return this.solution;
     }
 
-    StringBuilder getAnswer () {
+    public String getAnswer() {
         return this.answer;
     }
 }

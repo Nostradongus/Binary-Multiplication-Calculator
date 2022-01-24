@@ -1,12 +1,11 @@
 package com.csarch2.group11.binarymultiplication;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
 
 @Entity
 public class Calculator {
 
-    private StringBuilder solution;
-    private StringBuilder answer;
     private Input input;
 
     public Calculator (Input input) {
@@ -14,11 +13,77 @@ public class Calculator {
     }
 
     Answer performPenAndPencil () {
+        String multiplicand = input.getMultiplicand();
+        String multiplier = input.getMultiplier();
 
+        // initialize string ArrayList for intermediates
+        ArrayList<String> intermediates = new ArrayList<>();
+        for (int i = 0; i < multiplier.length(); i++) {
+            intermediates.add("");
+        }
 
-        // TODO: remove this
-        return createTemporaryAnswer();
-        // proposed: return new Answer(solution.toString(), answer.toString());
+        // get intermediates, multiplying per each bit of the multiplier to the multiplicand
+        // starting from the right
+        int factor = 0;
+        for (int i = multiplier.length() - 1; i >= 0; i--) {
+            String intermediate = intermediates.get(multiplier.length() - (i + 1));
+            // 1) shift to left based on current intermediate's position (factor)
+            for (int j = 0; j < factor; j++) {
+                // add trailing spaces
+                intermediate += " ";
+            }
+            // 2) multiply:
+            // if current bit is 1, copy multiplicand to current intermediate
+            // else, add zeroes according to number of bits (either multiplicand or multiplier)
+            if (multiplier.charAt(i) == '1') {
+                intermediate = multiplicand + intermediate;
+            } else {
+                intermediate = addLeadingZeroes(intermediate, multiplier.length());
+            }
+            // 3) sign-extend
+            char signBit = intermediate.charAt(0);
+            for (int j = 1; j <= i + 1; j++) {
+                intermediate = signBit + intermediate;
+            }
+            // update current intermediate in ArrayList
+            intermediates.set(multiplier.length() - (i + 1), intermediate);
+            // increment factor for next intermediate position
+            factor++;
+        }
+
+        // check if multiplier is negative, add additional 2's complement multiplicand intermediate
+        // to ArrayList as needed to calculate correct result
+        if (multiplier.charAt(0) == '1') {
+            String twosComplement = convertToTwosComplement(multiplicand);
+            for (int i = 0; i < factor; i++) {
+                // add trailing spaces
+                twosComplement += " ";
+            }
+            intermediates.add(twosComplement);
+        }
+
+        // calculate sum of intermediates to get final result
+        String answer = "";
+        int bitCarry = 0;
+        for (int i = intermediates.get(0).length() - 1; i >= 0; i--) { // traverse through each bit
+            int bitSum = bitCarry;
+            for (int j = 0; j < intermediates.size(); j++) { // traverse through each intermediate with current bit position
+                if (intermediates.get(j).charAt(i) == '1') {
+                    bitSum++;
+                }
+            }
+            if (bitSum > 1) {
+                int quotient = bitSum / 2;
+                int remainder = bitSum % 2;
+                bitCarry = quotient;
+                answer = remainder + answer;
+            } else {
+                bitCarry = 0;
+                answer = bitSum + answer;
+            }
+        }
+
+        return new Answer(multiplicand, multiplier, intermediates, answer);
     }
 
     Answer performBooths () {
@@ -105,6 +170,6 @@ public class Calculator {
     // TODO: remove this
     private Answer createTemporaryAnswer () {
         String temp = "101";
-        return new Answer (temp, temp);
+        return new Answer (temp, temp, new ArrayList<String>(), temp);
     }
 }

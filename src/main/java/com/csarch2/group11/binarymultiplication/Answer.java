@@ -1,22 +1,19 @@
 package com.csarch2.group11.binarymultiplication;
 
 import javax.persistence.Entity;
+import java.util.ArrayList;
 
 @Entity
 public class Answer {
-    String solution;
+    String multiplicand;
+    String multiplier;
+    ArrayList<String> intermediates;
     String answer;
 
-    public Answer (String solution, String answer) {
-        this.solution = solution;
-        this.answer = answer;
-    }
-
-    public String getSolution() {
-        return this.solution;
-    }
-
-    public String getAnswer() {
-        return this.answer;
+    public Answer (String multiplicand, String multiplier, ArrayList<String> intermediates, String answer) {
+        this.multiplicand = multiplicand;
+        this.multiplier = multiplier;
+        this.intermediates = intermediates;
+        this.answer = this.answer;
     }
 }

@@ -11,10 +11,11 @@ public class Calculator {
     public Calculator (Input input) {
         this.input = input;
 
+        // if input type is binary, check if number of bits for both multiplicand and multiplier are not equal
+        // equalize by sign-extending the binary input with the lowest number of bits
         String multiplicand = this.input.getMultiplicand();
         String multiplier = this.input.getMultiplier();
-        if (input.getInputType().equalsIgnoreCase(Input.BINARY) &&
-                multiplicand.length() != multiplier.length()) {
+        if (input.getInputType().equalsIgnoreCase(Input.BINARY) && multiplicand.length() != multiplier.length()) {
             if (multiplicand.length() > multiplier.length()) {
                 input.setMultiplier(extendBinary(multiplier, multiplicand.length() - multiplier.length(), multiplier.charAt (0)));
             } else if (multiplicand.length() < multiplier.length()) {

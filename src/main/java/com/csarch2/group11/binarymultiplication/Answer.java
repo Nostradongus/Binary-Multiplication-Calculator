@@ -9,10 +9,12 @@ public class Answer {
     String multiplier;
     ArrayList<String> intermediates;
     String answer;
+    String boothsEquivalent;
 
-    public Answer (String multiplicand, String multiplier, ArrayList<String> intermediates, String answer) {
+    public Answer (String multiplicand, String multiplier, String boothsEquivalent, ArrayList<String> intermediates, String answer) {
         this.multiplicand = multiplicand;
         this.multiplier = multiplier;
+        this.boothsEquivalent = boothsEquivalent;
         this.intermediates = intermediates;
         this.answer = answer;
     }
@@ -22,14 +24,18 @@ public class Answer {
     }
 
     public String getMultiplicand() {
-        return multiplicand;
+        return this.multiplicand;
+    }
+
+    public String getBoothsEquivalent() {
+        return this.boothsEquivalent;
     }
 
     public String getMultiplier() {
-        return multiplier;
+        return this.multiplier;
     }
 
     public ArrayList<String> getIntermediates() {
-        return intermediates;
+        return this.intermediates;
     }
 }

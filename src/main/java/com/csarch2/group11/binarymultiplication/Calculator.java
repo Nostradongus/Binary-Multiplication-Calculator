@@ -95,7 +95,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, multiplier, intermediates, answer);
+        return new Answer(multiplicand, multiplier, "", intermediates, answer);
     }
 
     Answer performBooths () {
@@ -145,8 +145,8 @@ public class Calculator {
             intermediates.set((multiplierLength - (i + 1)) / 2, intermediate);
 
             // (6) increment factor every 2nd iteration (due to x2 length of multiplier)
-            if (i % 2 == 1)
-                factor++;
+            //if (i % 2 == 1)
+            factor++;
         }
 
         // (7) Calculate sum of intermediates to get final result
@@ -172,7 +172,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, multiplier, intermediates, answer);
+        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer);
     }
 
     Answer performExtendedBooths () {
@@ -202,6 +202,7 @@ public class Calculator {
                 // if +1
                 if (multiplier.charAt (i - 1) == '+') {
                     intermediate = multiplicand + intermediate;
+                    intermediate = extendBinary (intermediate, 1, intermediate.charAt (0));
                 // if -1
                 } else {
                     intermediate = convertToTwosComplement(multiplicand) + intermediate;
@@ -221,22 +222,28 @@ public class Calculator {
 
             // (4) Sign-extension
             char signBit = intermediate.charAt (0);
-            for (int j = 1; j <= i + 1; j++) {
+            for (int j = 1; j < i; j++) {
                 intermediate = signBit + intermediate;
             }
 
             // if '2' bit multiplier, perform 'shift left'
-            if (multiplier.charAt (i) == '2') {
-                intermediate = intermediate.substring (1);
-            }
+            // if (multiplier.charAt (i) == '2') {
+            //     intermediate = intermediate.substring (1);
+            // }
 
             // (5) Update current intermediate in ArrayList
             intermediates.set((multiplier.length() - (i + 1)) / 2, intermediate);
 
             // (6) increment factor every 2nd iteration (due to x2 length of multiplier)
-            if (i % 2 == 1)
-                factor++;
+            //if (i % 2 == 1)
+            factor++;
         }
+
+        // For debugging
+//        System.out.println ("BOOTH'S: " + multiplier);
+//        for (String s : intermediates) {
+//            System.out.println (s);
+//        }
 
         // (7) Calculate sum of intermediates to get final result
         String answer = "";
@@ -261,7 +268,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, multiplier, intermediates, answer);
+        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer);
     }
 
     void decimalToBinary () {

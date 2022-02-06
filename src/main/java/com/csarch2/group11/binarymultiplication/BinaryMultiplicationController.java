@@ -10,11 +10,6 @@ public class BinaryMultiplicationController {
 
     Answer answer;
 
-    @GetMapping(value="/calculator")
-    public String getCalculator () {
-        return "This is the calculator page";
-    }
-
     @PostMapping(value="/calculator")
     public void performCalculation (HttpServletResponse httpServletResponse, @RequestBody Input input) {
         // Reset answer

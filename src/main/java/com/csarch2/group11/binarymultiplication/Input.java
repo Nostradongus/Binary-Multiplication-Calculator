@@ -24,6 +24,10 @@ public class Input {
         this.inputType = inputType;
     }
 
+    public Input() {
+        super();
+    }
+
     public String getMultiplicand() {
         return this.multiplicand;
     }

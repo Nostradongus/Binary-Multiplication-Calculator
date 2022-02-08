@@ -1,11 +1,89 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset = "ISO-8859-1" />
-        <link href = "css/calculator.css" rel = "stylesheet"/>
-        <title>Spring Boot Application</title>
-    </head>
-    <body>
-        <h4>Calculator Page</h4>
-    </body>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Calculator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="css/calculator.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav>
+      <img id="logo" th:src="@{images/Logo.svg}" src="../images/Logo.svg" />
+      <h3>Binary Multiplication Calculator</h3>
+    </nav>
+    <section>
+      <span id="title">Binary Multiplication Calculator</span>
+      <form th:action="@{/calculator}" th:object="${input}" method="post">
+        <div class="operand-input">
+          <div class="input">
+            <label for="*{multiplicand}">Multiplicand</label>
+            <input
+                    type="number"
+                    id="*{multiplicand}"
+                    name="multiplicand"
+                    autocomplete="off"
+                    required
+            />
+          </div>
+          <span id="multiplication-operator">X</span>
+          <div class="input">
+            <label for="*{multiplier}">Multiplier</label>
+            <input
+                    type="number"
+                    id="*{multiplier}"
+                    name="multiplier"
+                    autocomplete="off"
+                    required
+            />
+          </div>
+        </div>
+        <div class="type-input">
+          <div class="radio">
+            <label>Input Type</label>
+            <div class="radio__input">
+              <input
+                      type="radio"
+                      id="decimal"
+                      name="inputType"
+                      value="DECIMAL"
+                      required
+              />
+              <label for="decimal">Decimal</label>
+              <input
+                      type="radio"
+                      id="binary"
+                      name="inputType"
+                      value="BINARY"
+              />
+              <label for="binary">Binary</label>
+            </div>
+          </div>
+          <div class="radio">
+            <label>Algorithm</label>
+            <div class="radio__input">
+              <input
+                      type="radio"
+                      id="pencil-and-paper"
+                      name="method"
+                      value="0"
+                      required
+              />
+              <label for="pencil-and-paper">Pencil-and-Paper</label>
+              <input type="radio" id="booth" name="method" value="1" />
+              <label for="booth">Booth's</label>
+              <input
+                      type="radio"
+                      id="extended-booth"
+                      name="method"
+                      value="2"
+              />
+              <label for="extended-booth">Extended Booth's</label>
+            </div>
+          </div>
+        </div>
+        <div class="button-input">
+          <input type="submit" id="submit" value="Solve" />
+        </div>
+      </form>
+    </section>
+  </body>
 </html>

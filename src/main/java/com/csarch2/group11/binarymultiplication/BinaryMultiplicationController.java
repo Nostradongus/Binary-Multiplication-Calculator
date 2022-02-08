@@ -11,10 +11,9 @@ public class BinaryMultiplicationController {
     Answer answer;
 
     @PostMapping(value="/calculator")
-    public void performCalculation (HttpServletResponse httpServletResponse, @RequestBody Input input) {
+    public void performCalculation (HttpServletResponse httpServletResponse, Input input) {
         // Reset answer
         this.answer = null;
-
 
         // Create Calculator instance
         Calculator calculator = new Calculator (input);
@@ -55,6 +54,32 @@ public class BinaryMultiplicationController {
         }
 
         // else, return answer
+        return this.answer;
+    }
+
+    public void performCalculation (Input input) {
+        // Reset answer
+        this.answer = null;
+
+        // Create Calculator instance
+        Calculator calculator = new Calculator (input);
+
+        // If input is in DECIMAL, then convert to BINARY
+        if (input.getInputType().equalsIgnoreCase(Input.DECIMAL)) {
+            calculator.decimalToBinary ();
+        }
+
+        // Proceed to solving based on method chosen
+        if (input.getMethod() == Input.PEN_AND_PAPER) {
+            this.answer = calculator.performPenAndPaper();
+        } else if (input.getMethod() == Input.BOOTHS) {
+            this.answer = calculator.performBooths();
+        } else if (input.getMethod() == Input.EXTENDED_BOOTHS) {
+            this.answer = calculator.performExtendedBooths();
+        }
+    }
+
+    public Answer showResults () {
         return this.answer;
     }
 }

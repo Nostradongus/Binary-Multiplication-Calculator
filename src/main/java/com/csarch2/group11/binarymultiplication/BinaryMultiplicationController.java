@@ -1,34 +1,51 @@
 package com.csarch2.group11.binarymultiplication;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RestController
+@Controller
 public class BinaryMultiplicationController {
 
     Answer answer;
+    Input input;
+    String methodUsed;
 
     @PostMapping(value="/calculator")
-    public void performCalculation (HttpServletResponse httpServletResponse, Input input) {
+    public void performCalculation (HttpServletResponse httpServletResponse, @ModelAttribute("input") Input formInput) {
         // Reset answer
         this.answer = null;
+        this.input = new Input(formInput.getMultiplicand(), formInput.getMultiplier(), formInput.getMethod(), formInput.getInputType());
+
+        switch (formInput.getMethod()) {
+            case 0:
+                methodUsed = "Pen and Paper";
+                break;
+            case 1:
+                methodUsed = "Booth's";
+                break;
+            case 2:
+                methodUsed = "Extended Booth's";
+                break;
+        }
 
         // Create Calculator instance
-        Calculator calculator = new Calculator (input);
+        Calculator calculator = new Calculator (formInput);
 
         // If input is in DECIMAL, then convert to BINARY
-        if (input.getInputType().equalsIgnoreCase(Input.DECIMAL)) {
+        if (formInput.getInputType().equalsIgnoreCase(Input.DECIMAL)) {
             calculator.decimalToBinary ();
         }
 
         // Proceed to solving based on method chosen
-        if (input.getMethod() == Input.PEN_AND_PAPER) {
+        if (formInput.getMethod() == Input.PEN_AND_PAPER) {
             this.answer = calculator.performPenAndPaper();
-        } else if (input.getMethod() == Input.BOOTHS) {
+        } else if (formInput.getMethod() == Input.BOOTHS) {
             this.answer = calculator.performBooths();
-        } else if (input.getMethod() == Input.EXTENDED_BOOTHS) {
+        } else if (formInput.getMethod() == Input.EXTENDED_BOOTHS) {
             this.answer = calculator.performExtendedBooths();
         }
 
@@ -40,8 +57,12 @@ public class BinaryMultiplicationController {
         }
     }
 
-    @GetMapping(value="/calculator-results")
-    public Answer showResults (HttpServletResponse httpServletResponse) {
+    @RequestMapping(value="/calculator-results")
+    public String showResults (HttpServletResponse httpServletResponse, Model model) {
+        model.addAttribute("answer", answer);
+        model.addAttribute("input", input);
+        model.addAttribute("method", methodUsed);
+
         // If no answer, redirect back to calculator page
         if (this.answer == null) {
             try {
@@ -53,30 +74,27 @@ public class BinaryMultiplicationController {
             return null;
         }
 
-        // else, return answer
-        return this.answer;
+        return "calculator-results";
     }
 
-    public void performCalculation (Input input) {
-        // Reset answer
-        this.answer = null;
+    @RequestMapping(value="/calculator-results-step-by-step")
+    public String showStepByStep (HttpServletResponse httpServletResponse, Model model) {
+        model.addAttribute("answer", answer);
+        model.addAttribute("input", input);
+        model.addAttribute("method", methodUsed);
 
-        // Create Calculator instance
-        Calculator calculator = new Calculator (input);
+        // If no answer, redirect back to calculator page
+        if (this.answer == null) {
+            try {
+                httpServletResponse.sendRedirect("/calculator");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        // If input is in DECIMAL, then convert to BINARY
-        if (input.getInputType().equalsIgnoreCase(Input.DECIMAL)) {
-            calculator.decimalToBinary ();
+            return null;
         }
 
-        // Proceed to solving based on method chosen
-        if (input.getMethod() == Input.PEN_AND_PAPER) {
-            this.answer = calculator.performPenAndPaper();
-        } else if (input.getMethod() == Input.BOOTHS) {
-            this.answer = calculator.performBooths();
-        } else if (input.getMethod() == Input.EXTENDED_BOOTHS) {
-            this.answer = calculator.performExtendedBooths();
-        }
+        return "calculator-step-by-step";
     }
 
     public Answer showResults () {

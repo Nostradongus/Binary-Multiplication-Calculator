@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Pencil and Paper</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="css/universal.css" rel="stylesheet" />
+    <link href="css/calculator-results.css" rel="stylesheet" />
+</head>
+<body>
+<nav id="go-back-nav">
+    <a id="go-back" th:href="@{/calculator}">
+        <span>Go Back</span>
+    </a>
+    <span id="header" th:text="${method + ' Algorithm'}"/>
+</nav>
+<section>
+    <div id="answer-container">
+        <div id="operands">
+            <span th:text="${input.multiplicand}"/>
+            <span>x</span>
+            <span th:text="${input.multiplier}"/>
+            <span>=</span>
+        </div>
+        <span id="answer" th:text="${answer.answer}"/>
+        <div id="buttons">
+            <a href="/calculator-results-step-by-step">
+                <img th:src="@{images/Show-Solution.svg}"/>
+                Show Solution
+                <img th:src="@{images/Show-Solution.svg}"/>
+            </a>
+            <div id="download">
+                <button>
+                    Download as Text
+                    <img />
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -68,7 +68,11 @@
       </div>
     </div>
     <div class="step">
-      <span>Perform the Multiplication and acquire the Product</span>
+      <span th:if="${answer.multiplicandTwosComplement == ''}">Perform binary multiplication and acquire the product</span>
+      <span th:unless="${answer.multiplicandTwosComplement == ''}">
+        Perform binary multiplication and acquire the product. Since multiplier is negative,
+        add 2's complement of multiplicand as the last intermediate to acquire correct result.
+      </span>
       <hr />
       <div class="step__contents">
         <div>
@@ -90,7 +94,7 @@
       </div>
     </div>
     <div class="step">
-      <span>The answer is...</span>
+      <span>And the answer is...</span>
       <hr />
       <div class="step__contents">
         <div class="component">

@@ -10,13 +10,15 @@ public class Answer {
     ArrayList<String> intermediates;
     String answer;
     String boothsEquivalent;
+    String multiplicandTwosComplement;
 
-    public Answer (String multiplicand, String multiplier, String boothsEquivalent, ArrayList<String> intermediates, String answer) {
+    public Answer (String multiplicand, String multiplier, String boothsEquivalent, ArrayList<String> intermediates, String answer, String multiplicandTwosComplement) {
         this.multiplicand = multiplicand;
         this.multiplier = multiplier;
         this.boothsEquivalent = boothsEquivalent;
         this.intermediates = intermediates;
         this.answer = answer;
+        this.multiplicandTwosComplement = multiplicandTwosComplement;
     }
 
     public String getAnswer () {
@@ -37,5 +39,9 @@ public class Answer {
 
     public ArrayList<String> getIntermediates() {
         return this.intermediates;
+    }
+
+    public String getMultiplicandTwosComplement() {
+        return this.multiplicandTwosComplement;
     }
 }

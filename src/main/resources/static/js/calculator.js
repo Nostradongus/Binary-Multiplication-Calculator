@@ -3,11 +3,7 @@ function validateForm() {
     let multiplier = document.getElementById('multiplier').value;
     let binary = document.getElementById('binary');
 
-    console.log(multiplicand);
-    console.log(multiplier);
-    console.log(binary.checked);
-
-    if (!isBinary(multiplier) && !isBinary(multiplicand) && binary.checked) {
+    if ((!isBinary(multiplier) || !isBinary(multiplicand)) && binary.checked) {
         alert("Error! Only Binary digits (0-1) are allowed in Binary input type!");
         return false;
     }
@@ -17,7 +13,8 @@ function validateForm() {
 
 function isBinary(input) {
     for (let index = 0; index < input.length; index++) {
-        if (input[index] !== '0' || input[index] !== '1') {
+        let bit = input[index];
+        if (bit != '0' && bit != '1') {
             return false;
         }
     }

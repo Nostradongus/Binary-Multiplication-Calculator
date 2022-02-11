@@ -5,16 +5,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/universal.css" rel="stylesheet" />
     <link href="css/calculator.css" rel="stylesheet" />
-    <link rel="shortcut icon" href ="/images/Logo.svg"/>
-    <script>
+    <link rel="shortcut icon" href="/images/Logo.svg"/>
+    <script type="text/javascript">
       function validateForm() {
+        console.log("Test");
         let form = document.calculatorForm;
         let multiplicand = form["multiplicand"].value;
         let multiplier = form["multiplier"].value;
         let inputType = form["inputType"].value;
 
         if (!isBinary(multiplier) && !isBinary(multiplicand) && inputType == "BINARY") {
-          Window.alert("Error! Only Binary digits (0-1) are allowed in Binary input type!");
+          alert("Error! Only Binary digits (0-1) are allowed in Binary input type!");
         } else {
           form.submit();
         }
@@ -35,9 +36,10 @@
       <img id="logo" th:src="@{images/Logo.svg}" src="../images/Logo.svg" />
       <h3>Binary Multiplication Calculator</h3>
     </nav>
+
     <section>
       <span id="title">Binary Multiplication Calculator</span>
-      <form name="calculatorForm" th:object="${input}" method="post" onsubmit="validateForm()">
+      <form name="calculatorForm" th:object="${input}" method="post" onsubmit="return validateForm()">
         <div class="operand-input">
           <div class="input">
             <label for="*{multiplicand}">Multiplicand</label>
@@ -101,5 +103,6 @@
         </div>
       </form>
     </section>
+
   </body>
 </html>

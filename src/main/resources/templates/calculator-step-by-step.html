@@ -29,10 +29,10 @@
         <img th:src="@{images/Show-Solution.svg}" />
       </a>
       <div id="download">
-        <button>
-          Download as Text
-          <img />
-        </button>
+        <a th:href="@{/download-answer}">
+          Download as Text File
+          <img th:src="@{images/Download.svg}"/>
+        </a>
       </div>
     </div>
   </div>
@@ -73,14 +73,13 @@
       <div class="step__contents">
         <div>
           <div class="component--left">
-            <span th:text="${answer.multiplicand}" />
-            <span th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}" />
+            <span class="perform__operand" th:text="${answer.multiplicand}" />
+            <span class="perform__operand" th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}" />
             <span>
                   <th:block th:each="step : ${answer.intermediates}">___</th:block>
                 </span>
             <th:block th:each="step,iteration : ${answer.intermediates}">
-                  <span th:if="${#lists.size(answer.intermediates) -1 != iteration.index}" th:text="${step}" />
-                  <span class="color--new" th:unless="${#lists.size(answer.intermediates) -1 != iteration.index}" th:text="${step}" />
+                  <span th:text="${step}" />
             </th:block>
             <span>
                   <th:block th:each="step : ${answer.intermediates}">___</th:block>
@@ -91,11 +90,11 @@
       </div>
     </div>
     <div class="step">
-      <span>In Summary...</span>
+      <span>The answer is...</span>
       <hr />
       <div class="step__contents">
         <div class="component">
-          <span th:text="${answer.multiplicand + ' x ' + (input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier) + ' = ' + answer.answer}" />
+          <span th:text="${answer.multiplicand + '  x  ' + (input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier) + '  =  ' + answer.answer}" />
         </div>
       </div>
     </div>

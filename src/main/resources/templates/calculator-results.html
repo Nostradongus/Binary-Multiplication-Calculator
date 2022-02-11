@@ -5,6 +5,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="css/universal.css" rel="stylesheet" />
     <link href="css/calculator-results.css" rel="stylesheet" />
+    <script>
+        function download(url) {
+            const a = document.createElement('a')
+            a.href = url
+            a.download = url.split('/').pop()
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+        }
+    </script>
 </head>
 <body>
 <nav id="go-back-nav">
@@ -29,10 +39,10 @@
                 <img th:src="@{images/Show-Solution.svg}"/>
             </a>
             <div id="download">
-                <button>
-                    Download as Text
-                    <img />
-                </button>
+                <a th:href="@{/download-answer}">
+                    Download as Text File
+                    <img th:src="@{images/Download.svg}"/>
+                </a>
             </div>
         </div>
     </div>

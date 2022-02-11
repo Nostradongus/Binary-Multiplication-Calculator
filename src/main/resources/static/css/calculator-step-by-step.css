@@ -103,7 +103,7 @@ justify-content: flex-end;
   justify-content: flex-end;
 }
 
-#download button {
+#download a {
   padding: 10px 15px;
   border: 0;
   background-color: #b0b0b0;
@@ -131,6 +131,7 @@ justify-content: flex-end;
   gap: 20px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .component {
@@ -161,4 +162,9 @@ justify-content: flex-end;
 
 .color--new {
   color: #d375ff;
+}
+
+.perform__operand {
+  width: 100%;
+  text-align: center;
 }

@@ -9,6 +9,7 @@
 <body>
 <nav id="go-back-nav">
   <a id="go-back" th:href="@{/calculator}">
+    <img th:src="@{images/Go-Back.svg}" />
     <span>Go Back</span>
   </a>
   <span id="header" th:text="${method + ' Algorithm'}" />
@@ -77,18 +78,21 @@
       <div class="step__contents">
         <div>
           <div class="component--left">
-            <span class="perform__operand" th:text="${answer.multiplicand}" />
-            <span class="perform__operand" th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}" />
-            <span>
-                  <th:block th:each="step : ${answer.intermediates}">___</th:block>
-                </span>
+            <div class="operand">
+              <div class="operand__symbol">
+                X
+              </div>
+              <div class="operand__operands">
+                <span class="perform__operand" th:text="${answer.multiplicand}" />
+                <span class="perform__operand" th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}" />
+              </div>
+            </div>
+            <hr />
             <th:block th:each="step,iteration : ${answer.intermediates}">
                   <span th:text="${step}" />
             </th:block>
-            <span>
-                  <th:block th:each="step : ${answer.intermediates}">___</th:block>
-                </span>
-            <span class="color--new" th:text="${answer.answer}" />
+            <hr />
+            <span th:text="${answer.answer}" />
           </div>
         </div>
       </div>
@@ -98,7 +102,11 @@
       <hr />
       <div class="step__contents">
         <div class="component">
-          <span th:text="${answer.multiplicand + '  x  ' + (input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier) + '  =  ' + answer.answer}" />
+          <span th:text="${answer.multiplicand}"/>
+          <span th:text="${' x '}"/>
+          <span th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}"/>
+          <span th:text="${' = '}"/>
+          <span th:text="${answer.answer}"/>
         </div>
       </div>
     </div>

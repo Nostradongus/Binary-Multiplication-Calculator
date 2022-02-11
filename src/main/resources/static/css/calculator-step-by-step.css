@@ -13,6 +13,7 @@ justify-content: center;
 background-color: #d375ff;
 padding: 15px 50px;
 color: white;
+gap: 10px;
 }
 
 #header {
@@ -160,6 +161,11 @@ justify-content: flex-end;
   font_size: 20pt;
 }
 
+.component--left hr {
+  border-width: 3px;
+  width: 100%;
+}
+
 .color--new {
   color: #d375ff;
 }
@@ -167,4 +173,21 @@ justify-content: flex-end;
 .perform__operand {
   width: 100%;
   text-align: center;
+}
+
+.operand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.operand .operand__operands {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.operand .operand__symbol {
+  font-size: 18pt;
 }

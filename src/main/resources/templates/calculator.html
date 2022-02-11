@@ -6,8 +6,16 @@
     <link href="css/universal.css" rel="stylesheet" />
     <link href="css/calculator.css" rel="stylesheet" />
     <script>
-      function validateForm() {
-        let form = document.calculatorForm;
+      var form = document.getElementById('calculatorForm');
+
+      if (form.attachEvent) {
+        form.attachEvent("Submit", validateForm);
+      } else {
+        form.addEventListener("Submit", validateForm);
+      }
+
+      function validateForm(e) {
+        if (e.preventDefault) e.preventDefault();
         let multiplicand = form["multiplicand"].value;
         let multiplier = form["multiplier"].value;
         let inputType = form["inputType"].value;
@@ -19,9 +27,9 @@
         }
       }
 
-      function isBinary(String input) {
+      function isBinary(input) {
         for (let index = 0; index < input.length; index++) {
-          if (input[i] != '0' || input[i] != '1') {
+          if (input[index] != '0' || input[index] != '1') {
             return false;
           }
         }
@@ -36,7 +44,7 @@
     </nav>
     <section>
       <span id="title">Binary Multiplication Calculator</span>
-      <form name="calculatorForm" th:object="${input}" method="post" onsubmit="validateForm()">
+      <form name="calculatorForm" id="calculatorForm" th:object="${input}" method="post" onsubmit="validateForm()">
         <div class="operand-input">
           <div class="input">
             <label for="*{multiplicand}">Multiplicand</label>

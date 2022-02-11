@@ -136,9 +136,23 @@ public class Calculator {
             }
 
             // (4) Sign-extension
-            char signBit = intermediate.charAt(0);
-            for (int j = 1; j <= i + 1; j+=2) {
-                intermediate = signBit + intermediate;
+            char signBit = intermediate.charAt (0);
+
+            // for non-first intermediates
+            if (i < multiplier.length () - 3) {
+                // get previous intermediate length
+                int prevLength = intermediates.get ((multiplier.length () - (i + 1)) / 2 - 1).length ();
+
+                // sign extend based on length of previous intermediate
+                while (intermediate.length () < prevLength) {
+                    intermediate = signBit + intermediate;
+                }
+                // for first intermediate
+            } else {
+                // sign extend based on multiplicand length
+                while (intermediate.length () < multiplicand.length() * 2) {
+                    intermediate = signBit + intermediate;
+                }
             }
 
             // (5) Update current intermediate in ArrayList
@@ -213,7 +227,7 @@ public class Calculator {
                     intermediate = multiplicand + '0' + intermediate;
                 // if -2
                 } else {
-                    intermediate = convertToTwosComplement(multiplicand) + '0' + intermediate;
+                    intermediate = convertToTwosComplement(extendBinary(multiplicand, 1, multiplicand.charAt (0))) + '0' + intermediate;
                 }
             // if 0
             } else {
@@ -222,14 +236,23 @@ public class Calculator {
 
             // (4) Sign-extension
             char signBit = intermediate.charAt (0);
-            for (int j = 1; j < i; j++) {
-                intermediate = signBit + intermediate;
-            }
 
-            // if '2' bit multiplier, perform 'shift left'
-            // if (multiplier.charAt (i) == '2') {
-            //     intermediate = intermediate.substring (1);
-            // }
+            // for non-first intermediates
+            if (i < multiplier.length () - 3) {
+                // get previous intermediate length
+                int prevLength = intermediates.get ((multiplier.length () - (i + 1)) / 2 - 1).length ();
+
+                // sign extend based on length of previous intermediate
+                while (intermediate.length () < prevLength) {
+                    intermediate = signBit + intermediate;
+                }
+            // for first intermediate
+            } else {
+                // sign extend based on multiplicand length
+                while (intermediate.length () < multiplicand.length() * 2) {
+                    intermediate = signBit + intermediate;
+                }
+            }
 
             // (5) Update current intermediate in ArrayList
             intermediates.set((multiplier.length() - (i + 1)) / 2, intermediate);

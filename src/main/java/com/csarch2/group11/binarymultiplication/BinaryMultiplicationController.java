@@ -1,8 +1,12 @@
 package com.csarch2.group11.binarymultiplication;
 
+import com.csarch2.group11.binarymultiplication.service.FileExporter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,10 +16,15 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Controller
 public class BinaryMultiplicationController {
+    @Autowired
+    private FileExporter fileExporter;
 
     Answer answer;
     Input input;
@@ -102,6 +111,84 @@ public class BinaryMultiplicationController {
         }
 
         return "calculator-step-by-step";
+    }
+
+    @RequestMapping("/download-answer")
+    public void downloadAnswerTextFile(HttpServletResponse response) throws IOException {
+        String fileName = "solution.txt";
+        StringBuilder fileContent = generateTextFileContent();
+
+        // Create text file
+        Path exportedPath = fileExporter.export(fileContent.toString (), fileName);
+
+        // Download file with HttpServletResponse
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+        response.setContentLength((int)exportedPath.toFile().length());
+
+        // Copy file content to response output stream
+        Files.copy(exportedPath, response.getOutputStream());
+        response.getOutputStream().flush();
+    }
+
+    private StringBuilder generateTextFileContent () {
+        StringBuilder fileContent = new StringBuilder();
+
+        // Append Given
+        fileContent.append ("Given: \n");
+        fileContent.append ("Multiplicand: " + answer.getMultiplicand() + "\n");
+        fileContent.append ("Multiplier: " + answer.getMultiplier() + "\n\n");
+
+        // if DECIMAL input
+        if (input.getInputType().equalsIgnoreCase("DECIMAL")) {
+            // Append Conversion of Decimal to Binary
+            fileContent.append ("Convert the Decimal operands to Binary:\n");
+            fileContent.append (input.getMultiplicand() + " --> " + answer.getMultiplicand() + "\n");
+            fileContent.append (input.getMultiplier() + " --> " + answer.getMultiplier() + "\n\n");
+        }
+
+        // if NOT Pen-And-Paper
+        if (input.getMethod() != 0) {
+            // Append Booth's Equivalent Conversion
+            fileContent.append ("Convert the Multiplier operand to its corresponding Booth's equivalent:\n");
+            fileContent.append (input.getMultiplier() + " --> " + answer.getBoothsEquivalent() + "\n\n");
+        }
+
+        // Append Solution Proper
+        fileContent.append ("Perform binary multiplication and acquire the product:\n");
+        fileContent.append ("  " + answer.getMultiplicand() + "\n");
+
+        // If Pen-And-Paper, append multiplier as is
+        if (input.getMethod() == 0)
+            fileContent.append ("x " + answer.getMultiplier() + "\n");
+            // Else, append Booth's Equivalent
+        else
+            fileContent.append ("x " + answer.getBoothsEquivalent() + "\n");
+
+        // Append bar
+        for (int i = 0; i <= answer.getMultiplicand().length() * 2 + 2; i++)
+            fileContent.append ("-");
+        fileContent.append ("\n");
+
+        // Append each Intermediate
+        for (String intermediate : answer.getIntermediates()) {
+            fileContent.append (intermediate + "\n");
+        }
+
+        // Append bar
+        for (int i = 0; i <= answer.getMultiplicand().length() * 2 + 2; i++)
+            fileContent.append ("-");
+        fileContent.append ("\n");
+
+        // Append Answer
+        fileContent.append (answer.getAnswer());
+        fileContent.append ("\n\n");
+
+        // Append Final Answer
+        fileContent.append ("And the answer is: \n");
+        fileContent.append (answer.getMultiplicand() + " * " + answer.getBoothsEquivalent() + " = " + answer.getAnswer());
+
+        return fileContent;
     }
 
     public Answer showResults () {

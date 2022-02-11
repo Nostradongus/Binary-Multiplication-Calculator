@@ -119,6 +119,7 @@ public class BinaryMultiplicationController {
         StringBuilder fileContent = generateTextFileContent();
 
         // Create text file
+        System.out.print (fileContent.toString());
         Path exportedPath = fileExporter.export(fileContent.toString (), fileName);
 
         // Download file with HttpServletResponse
@@ -129,6 +130,7 @@ public class BinaryMultiplicationController {
         // Copy file content to response output stream
         Files.copy(exportedPath, response.getOutputStream());
         response.getOutputStream().flush();
+        response.flushBuffer();
     }
 
     private StringBuilder generateTextFileContent () {
@@ -164,7 +166,7 @@ public class BinaryMultiplicationController {
             fileContent.append ("Convert the Multiplier operand to its corresponding " + methodUsed + " bit pair:\n");
             fileContent.append (input.getMultiplier() + " --> " + answer.getBoothsEquivalent() + "\n\n");
         }
-
+        // TODO
         // Append Solution Proper
         fileContent.append ("Perform binary multiplication and acquire the product");
         if (!answer.getMultiplicandTwosComplement().equalsIgnoreCase(""))

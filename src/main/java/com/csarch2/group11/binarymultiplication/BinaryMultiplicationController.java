@@ -134,10 +134,21 @@ public class BinaryMultiplicationController {
     private StringBuilder generateTextFileContent () {
         StringBuilder fileContent = new StringBuilder();
 
+        // Append Title
+        fileContent.append ("Binary Multiplication Calculator \n\n");
+
+        // Append Method Used
+        fileContent.append ("Method Used: " + methodUsed + "\n\n");
+
         // Append Given
         fileContent.append ("Given: \n");
-        fileContent.append ("Multiplicand: " + answer.getMultiplicand() + "\n");
-        fileContent.append ("Multiplier: " + answer.getMultiplier() + "\n\n");
+        if (input.getInputType().equalsIgnoreCase("DECIMAL")) {
+            fileContent.append ("Multiplicand: " + input.getMultiplicand() + "\n");
+            fileContent.append ("Multiplier: " + input.getMultiplier() + "\n\n");
+        } else {
+            fileContent.append ("Multiplicand: " + answer.getMultiplicand() + "\n");
+            fileContent.append ("Multiplier: " + answer.getMultiplier() + "\n\n");
+        }
 
         // if DECIMAL input
         if (input.getInputType().equalsIgnoreCase("DECIMAL")) {
@@ -150,12 +161,16 @@ public class BinaryMultiplicationController {
         // if NOT Pen-And-Paper
         if (input.getMethod() != 0) {
             // Append Booth's Equivalent Conversion
-            fileContent.append ("Convert the Multiplier operand to its corresponding Booth's equivalent:\n");
+            fileContent.append ("Convert the Multiplier operand to its corresponding " + methodUsed + " bit pair:\n");
             fileContent.append (input.getMultiplier() + " --> " + answer.getBoothsEquivalent() + "\n\n");
         }
 
         // Append Solution Proper
-        fileContent.append ("Perform binary multiplication and acquire the product:\n");
+        fileContent.append ("Perform binary multiplication and acquire the product");
+        if (!answer.getMultiplicandTwosComplement().equalsIgnoreCase(""))
+            fileContent.append (". Since multiplier is negative,\nadd 2's complement of multiplicand as the last intermediate to acquire correct result:\n");
+        else
+            fileContent.append (":\n");
         fileContent.append ("  " + answer.getMultiplicand() + "\n");
 
         // If Pen-And-Paper, append multiplier as is
@@ -186,7 +201,12 @@ public class BinaryMultiplicationController {
 
         // Append Final Answer
         fileContent.append ("And the answer is: \n");
-        fileContent.append (answer.getMultiplicand() + " * " + answer.getBoothsEquivalent() + " = " + answer.getAnswer());
+        fileContent.append (answer.getMultiplicand() + " * ");
+        if (input.getMethod() == 0)
+            fileContent.append (answer.getMultiplier());
+        else
+            fileContent.append (answer.getBoothsEquivalent());
+        fileContent.append (" = " + answer.getAnswer());
 
         return fileContent;
     }

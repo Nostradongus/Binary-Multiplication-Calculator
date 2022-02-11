@@ -1,0 +1,170 @@
+#go-back-nav {
+padding: 0;
+}
+
+#go-back-nav span {
+font-size: 16pt;
+}
+
+#go-back {
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: #d375ff;
+padding: 15px 50px;
+color: white;
+}
+
+#header {
+font-weight: bold;
+}
+
+#answer-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 25px;
+}
+
+#operands {
+display: flex;
+flex-direction: row;
+gap: 20px;
+}
+
+#operands span {
+color: #b0b0b0;
+font-weight: bold;
+font-size: 15pt;
+}
+
+#answer {
+font-size: 50pt;
+font-weight: bold;
+}
+
+#steps {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 40px;
+width: 100%;
+}
+
+#steps__header {
+width: 100%;
+display: flex;
+}
+
+#steps__header span {
+font-weight: bold;
+font-size: 25pt;
+}
+
+#download {
+width: 100%;
+display: flex;
+align-items: flex-end;
+justify-content: flex-end;
+}
+
+#buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+#buttons a {
+  display: flex;
+  gap: 10px;
+  padding: 15px 65px;
+  font-size: 15pt;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: #d375ff;
+  color: white;
+}
+
+#buttons a:link {
+  text-decoration: inherit;
+}
+
+#buttons a:visited {
+  text-decoration: inherit;
+}
+
+#download {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+#download a {
+  padding: 10px 15px;
+  border: 0;
+  background-color: #b0b0b0;
+  color: white;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 20px 50px;
+  border-radius: 15px;
+  background-color: white;
+}
+
+.step span {
+  font-size: 16pt
+}
+
+.step__contents {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.component {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.component span {
+  font_size: 20pt;
+}
+
+.component--left {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 25px;
+}
+
+.component--left span {
+  font_size: 20pt;
+}
+
+.color--new {
+  color: #d375ff;
+}
+
+.perform__operand {
+  width: 100%;
+  text-align: center;
+}

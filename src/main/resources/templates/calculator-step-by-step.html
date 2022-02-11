@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+  <title>Results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="css/universal.css" rel="stylesheet" />
+  <link href="css/calculator-step-by-step.css" rel="stylesheet" />
+</head>
+<body>
+<nav id="go-back-nav">
+  <a id="go-back" th:href="@{/calculator}">
+    <span>Go Back</span>
+  </a>
+  <span id="header" th:text="${method + ' Algorithm'}" />
+</nav>
+<section>
+  <div id="answer-container">
+    <div id="operands">
+      <span th:text="${input.multiplicand}" />
+      <span>x</span>
+      <span th:text="${input.multiplier}" />
+      <span>=</span>
+    </div>
+    <span id="answer" th:text="${answer.answer}" />
+    <div id="buttons">
+      <a href="/calculator-results">
+        <img th:src="@{images/Show-Solution.svg}" />
+        Hide Solution
+        <img th:src="@{images/Show-Solution.svg}" />
+      </a>
+      <div id="download">
+        <a th:href="@{/download-answer}">
+          Download as Text File
+          <img th:src="@{images/Download.svg}"/>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div id="steps">
+    <div id="steps__header">
+      <span>Steps</span>
+    </div>
+    <div th:if="${input.inputType == 'DECIMAL'}" class="step">
+      <span>Convert the Decimal operands to Binary</span>
+      <hr />
+      <div class="step__contents">
+        <div class="component">
+          <span th:text="${input.multiplicand}" />
+          <img th:src="@{images/Convert-Arrow.svg}" />
+          <span class="color--new" th:text="${answer.multiplicand}" />
+        </div>
+        <div class="component">
+          <span th:text="${input.multiplier}" />
+          <img th:src="@{images/Convert-Arrow.svg}" />
+          <span class="color--new" th:text="${answer.multiplier}" />
+        </div>
+      </div>
+    </div>
+    <div th:if="${input.method == 1 || input.method == 2}" class="step">
+      <span th:text="${'Convert the Multiplier operand to its corresponding ' + method + ' bit pair'}" />
+      <hr />
+      <div class="step__contents">
+        <div class="component">
+          <span th:text="${answer.multiplier}" />
+          <img th:src="@{images/Convert-Arrow.svg}" />
+          <span class="color--new" th:text="${answer.boothsEquivalent}" />
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <span th:if="${answer.multiplicandTwosComplement == ''}">Perform binary multiplication and acquire the product</span>
+      <span th:unless="${answer.multiplicandTwosComplement == ''}">
+        Perform binary multiplication and acquire the product. Since multiplier is negative,
+        add 2's complement of multiplicand as the last intermediate to acquire correct result.
+      </span>
+      <hr />
+      <div class="step__contents">
+        <div>
+          <div class="component--left">
+            <span class="perform__operand" th:text="${answer.multiplicand}" />
+            <span class="perform__operand" th:text="${input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier}" />
+            <span>
+                  <th:block th:each="step : ${answer.intermediates}">___</th:block>
+                </span>
+            <th:block th:each="step,iteration : ${answer.intermediates}">
+                  <span th:text="${step}" />
+            </th:block>
+            <span>
+                  <th:block th:each="step : ${answer.intermediates}">___</th:block>
+                </span>
+            <span class="color--new" th:text="${answer.answer}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <span>And the answer is...</span>
+      <hr />
+      <div class="step__contents">
+        <div class="component">
+          <span th:text="${answer.multiplicand + '  x  ' + (input.method == 1 || input.method == 2 ? answer.boothsEquivalent : answer.multiplier) + '  =  ' + answer.answer}" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

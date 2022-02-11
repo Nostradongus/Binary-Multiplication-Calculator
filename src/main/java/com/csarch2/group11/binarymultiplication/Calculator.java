@@ -65,13 +65,14 @@ public class Calculator {
 
         // check if multiplier is negative, add additional 2's complement multiplicand intermediate
         // to ArrayList as needed to calculate correct result
+        String multiplicandTwosComplement = "";
         if (multiplier.charAt(0) == '1') {
-            String twosComplement = convertToTwosComplement(multiplicand);
+            multiplicandTwosComplement = convertToTwosComplement(multiplicand);
             for (int i = 0; i < factor; i++) {
                 // add trailing spaces
-                twosComplement += " ";
+                multiplicandTwosComplement += " ";
             }
-            intermediates.add(twosComplement);
+            intermediates.add(multiplicandTwosComplement);
         }
 
         // calculate sum of intermediates to get final result
@@ -95,7 +96,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, multiplier, "", intermediates, answer);
+        return new Answer(multiplicand, multiplier, "", intermediates, answer, multiplicandTwosComplement);
     }
 
     Answer performBooths () {
@@ -186,7 +187,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer);
+        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer, "");
     }
 
     Answer performExtendedBooths () {
@@ -291,7 +292,7 @@ public class Calculator {
             }
         }
 
-        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer);
+        return new Answer(multiplicand, input.getMultiplier(), multiplier, intermediates, answer, "");
     }
 
     void decimalToBinary () {

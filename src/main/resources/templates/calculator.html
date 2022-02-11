@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Calculator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="css/universal.css" rel="stylesheet" />
+    <link href="css/calculator.css" rel="stylesheet" />
+    <script>
+      function validateForm() {
+        let form = document.calculatorForm;
+        let multiplicand = form["multiplicand"].value;
+        let multiplier = form["multiplier"].value;
+        let inputType = form["inputType"].value;
+
+        if (!isBinary(multiplier) && !isBinary(multiplicand) && inputType == "BINARY") {
+          Window.alert("Error! Only Binary digits (0-1) are allowed in Binary input type!");
+        } else {
+          form.submit();
+        }
+      }
+
+      function isBinary(String input) {
+        for (let index = 0; index < input.length; index++) {
+          if (input[i] != '0' || input[i] != '1') {
+            return false;
+          }
+        }
+        return true;
+      }
+    </script>
+  </head>
+  <body>
+    <nav>
+      <img id="logo" th:src="@{images/Logo.svg}" src="../images/Logo.svg" />
+      <h3>Binary Multiplication Calculator</h3>
+    </nav>
+    <section>
+      <span id="title">Binary Multiplication Calculator</span>
+      <form name="calculatorForm" th:object="${input}" method="post" onsubmit="validateForm()">
+        <div class="operand-input">
+          <div class="input">
+            <label for="*{multiplicand}">Multiplicand</label>
+            <input
+              type="number"
+              id="*{multiplicand}"
+              name="multiplicand"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <span id="multiplication-operator">X</span>
+          <div class="input">
+            <label for="*{multiplier}">Multiplier</label>
+            <input
+              type="number"
+              id="*{multiplier}"
+              name="multiplier"
+              autocomplete="off"
+              required
+            />
+          </div>
+        </div>
+        <div class="type-input">
+          <div class="radio">
+            <label>Input Type</label>
+            <div class="radio__input">
+              <input
+                type="radio"
+                id="decimal"
+                name="inputType"
+                value="DECIMAL"
+                required
+              />
+              <label for="decimal">Decimal</label>
+              <input type="radio" id="binary" name="inputType" value="BINARY" />
+              <label for="binary">Binary</label>
+            </div>
+          </div>
+          <div class="radio">
+            <label>Algorithm</label>
+            <div class="radio__input">
+              <input
+                type="radio"
+                id="pencil-and-paper"
+                name="method"
+                value="0"
+                required
+              />
+              <label for="pencil-and-paper">Pencil-and-Paper</label>
+              <input type="radio" id="booth" name="method" value="1" />
+              <label for="booth">Booth's</label>
+              <input type="radio" id="extended-booth" name="method" value="2" />
+              <label for="extended-booth">Extended Booth's</label>
+            </div>
+          </div>
+        </div>
+        <div class="button-input">
+<!--          <span th:if="${error}" th:text="${error.text}"/>-->
+          <input type="submit" id="submit" value="Solve" />
+        </div>
+      </form>
+    </section>
+  </body>
+</html>
